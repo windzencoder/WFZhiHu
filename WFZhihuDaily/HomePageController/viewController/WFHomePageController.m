@@ -167,7 +167,7 @@ static NSString * const kHeaderID = @"WFHeader";
 
 #pragma mark - ScrollView Delegate -
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-
+    //调用父类
     [super scrollViewDidScroll:scrollView];
     
     if (scrollView == self.mainTableView){
@@ -175,7 +175,7 @@ static NSString * const kHeaderID = @"WFHeader";
         CGFloat offSetY = scrollView.contentOffset.y;
         float h = offSetY / 200;
         self.navigationBar.alpha = (h > 1)?1:h;
-        self.statusBar.alpha = (h > 1)?1:h;
+        self.statusBar.alpha = (h > 1)?1:h;//透明度
         
         if ([self.mainTableView.tableHeaderView isKindOfClass:[WFAutoLoopView class]]) {
              [(WFAutoLoopView *)(self.mainTableView.tableHeaderView) wf_parallaxHeaderViewWithOffset:scrollView.contentOffset];

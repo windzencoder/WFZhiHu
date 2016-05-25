@@ -86,9 +86,11 @@
 }
 
 #pragma mark udpate cells
+//更新cells集合中放置的视图
 - (void)updateCells {
-    
+    //前一张
     int previousIdx = [self getVaildNextPageIdxWithIdx:self.currentIdx - 1];
+    //后一张
     int nextIdx = [self getVaildNextPageIdxWithIdx:self.currentIdx + 1];
     if (_cells == nil) {
         _cells = [NSMutableArray array];
@@ -106,10 +108,11 @@
 #pragma mark 重载cells
 - (void)reloadCells {
     
+    //先移除
     [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     _pagesCount = self.numberOfPagesInAutoLoopView(self);
     [self updateCells];
-    
+    //重新调整frame
     for (NSInteger i = 0; i < _cells.count; i ++) {
         WFBannerView *cell = [[WFBannerView alloc] init];
         cell.tag = i + kBannerViewTag;
@@ -122,12 +125,13 @@
         cell.frame = cellFrame;
         [_scrollView addSubview:cell];
     }
+    //_scrollView偏移到中间
     _scrollView.contentOffset = CGPointMake(kScreenWidth, 0);
     _pageControl.currentPage = _currentIdx;
     if (_scrollToPageForIndex) {
         _scrollToPageForIndex(_currentIdx);
     }
-    
+    //只有一个，隐藏，不滚动
     if (_banners.count == 1) {
         _scrollView.scrollEnabled = NO;
         _pageControl.hidden = YES;
@@ -164,6 +168,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     CGFloat offsetX = scrollView.contentOffset.x;
+    NSLog(@"banner offsetX is %f", offsetX);
     if(offsetX >= (2 * CGRectGetWidth(scrollView.frame))) {
         self.currentIdx = [self getVaildNextPageIdxWithIdx:self.currentIdx + 1];
         [self reloadData];
@@ -174,6 +179,7 @@
     }
 }
 
+//停止滑动后，还是滑动到中间，相当于是3张在循环
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [scrollView setContentOffset:CGPointMake(CGRectGetWidth(scrollView.bounds), 0) animated:YES];
 }
@@ -188,6 +194,7 @@
     _currentIdx = (int)banners.count  - 1;
     NSMutableArray *cells = [NSMutableArray array];
     [banners enumerateObjectsUsingBlock:^(WFBannerModel *banner, NSUInteger idx, BOOL *stop) {
+        //单个图片
         WFBannerView *cell = [[WFBannerView alloc] initWithFrame:self.frame];
         cell.banner = banner;
         cell.clickBannerCallBackBlock = ^(WFBannerModel *banner){
@@ -235,7 +242,6 @@
 
 #pragma mark - Public Methods
 - (void)wf_parallaxHeaderViewWithOffset:(CGPoint)offset{
-    
     if (_stretchAnimation == NO) {
         return;
     }
@@ -271,8 +277,8 @@
         rect.origin.y -= delta;
         rect.size.height += delta;
         _scrollView.frame = rect;
-        CGPoint newPoint = _scrollView.center;
-        newPoint.y += delta;
+        //CGPoint newPoint = _scrollView.center;
+        //newPoint.y += delta;
         self.clipsToBounds = NO;
         
         _offsetY = 0;

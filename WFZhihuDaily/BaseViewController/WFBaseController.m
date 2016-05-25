@@ -50,7 +50,7 @@
 #pragma mark - View
 #pragma mark - View factory
 - (void)configNavigationBar{
-
+    //view
     _statusBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 20)];
     _statusBar.backgroundColor = RGBColor(5, 143, 214, 1.0f);
     [self.view addSubview:_statusBar];
@@ -76,12 +76,12 @@
 
 
 - (void)configListView{
-
+    //tableView为全屏
     _mainTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.f, 0.f, kScreenWidth, kScreenHeight)];
-    _mainTableView.rowHeight = 80;
+    _mainTableView.rowHeight = 80;//row的行高
     _mainTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, kScreenWidth, 200.f)];
     [self.view addSubview:_mainTableView];
-    
+    //刷新的View
     _refreshView = [[WFRefreshView alloc] initWithFrame:CGRectMake(125, 32, 22.f, 22.f)];
     [self.view addSubview:_refreshView];
     
@@ -93,7 +93,7 @@
     if ([scrollView isEqual:self.mainTableView]){
         
         CGFloat offSetY = scrollView.contentOffset.y;
-
+        DLog(@"offSetY is %f", offSetY);
         if (offSetY <= 0 && offSetY >= -80) {
             if (-offSetY <= 40) {
                 if (!_isLoading) {
@@ -102,7 +102,7 @@
                     [_refreshView circleDependProgress:0];
                 }
             }
-           
+            //刷新数据（松手后回弹加载）
             if(!_isLoading && !scrollView.isDragging && -offSetY>40 && -offSetY<=80){
                 
                 [_refreshView circleDependProgress:0];
@@ -120,7 +120,7 @@
         }
         
         if (offSetY + 80 > scrollView.contentSize.height - kScreenHeight) {
-            if (!_isLoading) {
+            if (!_isLoading) {//加载更多数据
                 [self requestOldData];
             }
         }

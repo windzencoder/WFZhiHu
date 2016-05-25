@@ -152,7 +152,7 @@
     }
 
     if (k == 0) {//没标记最上  用数组第一个放最上
-        
+        //首页
         UIViewController *vc = [_controllers firstObject];
         [_containerController addChildViewController:vc];
         [_containerController.view addSubview:vc.view];

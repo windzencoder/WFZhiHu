@@ -15,7 +15,7 @@
 @interface WFBannerView : UIImageView
 
 @property (nonatomic, strong) WFBannerModel *banner;
-
+//点击回调
 @property (nonatomic,   copy) void(^clickBannerCallBackBlock)(WFBannerModel *banner);
 
 @property (nonatomic, strong)  UILabel *bannerTitleLbl;
