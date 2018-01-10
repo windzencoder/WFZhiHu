@@ -97,6 +97,7 @@ static NSString * const kHeaderID = @"WFHeader";
     
     WS(weakSelf);
     _autoLoopView = [[WFAutoLoopView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 200.f)];
+    _autoLoopView.backgroundColor = [UIColor redColor];
     _autoLoopView.stretchAnimation = YES;
     _autoLoopView.banners = [_viewModel getAutoLoopData];;
     _autoLoopView.clickAutoLoopCallBackBlock = ^(WFBannerModel *bannerModel){
@@ -136,7 +137,7 @@ static NSString * const kHeaderID = @"WFHeader";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+    //进入详情VC
     WFDetailVM *detailVM = [[WFDetailVM alloc] init];
     detailVM.singleNewsModel = [[_viewModel singleNewsAtIndexPath:indexPath] singeModel];
     detailVM.storeIdArray = _viewModel.newsIdArray;

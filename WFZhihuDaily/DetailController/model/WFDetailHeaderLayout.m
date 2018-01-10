@@ -12,6 +12,7 @@
 
 - (void)setDetailModel:(WFDetailNewsModel *)detailModel{
 
+    //计算frame
     _imageViewRect = CGRectMake(0.f, 0.f, kScreenWidth, 300.f);
     
     NSDictionary *attributesDic = @{NSFontAttributeName:[UIFont boldSystemFontOfSize:21],NSForegroundColorAttributeName:[UIColor whiteColor]};

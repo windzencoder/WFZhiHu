@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "WFLeftController.h"
-
+/**
+ *  主控制器
+ */
 @interface WFMainController : UIViewController
 
 /**

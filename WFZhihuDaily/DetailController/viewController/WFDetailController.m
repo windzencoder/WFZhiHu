@@ -93,15 +93,18 @@
 
     }
     
+    //webView
     if (!_detailWeb) {
         
         _detailWeb = [[WFWebView alloc] initWithFrame:CGRectMake(0, 20, kScreenWidth, kScreenHeight - 20 - 44)];
+        _detailWeb.backgroundColor  = [UIColor redColor];
         _detailWeb.scrollView.delegate = self;
         _detailWeb.webDelegate = self;
         [_containerView addSubview:_detailWeb];
 
     }
     
+    //headerView 图片
     if (!_detailHeaderView) {
         
         _detailHeaderView = [[WFDetailHeaderView alloc] initWithFrame:CGRectMake(0, -40, kScreenWidth, 260)];
@@ -110,6 +113,7 @@
 
     }
     
+    //gif动画
     [_containerView addSubview:self.loadingView];
     
 }
@@ -123,6 +127,7 @@
 
 - (void)refreshUI{
 
+    NSLog(@"html: %@", [_viewModel loadWebViewHtml]);
     [_detailWeb loadHTMLString:[_viewModel loadWebViewHtml] baseURL:nil];
     [_detailHeaderView refreshHeaderView:_viewModel];
    
@@ -136,15 +141,17 @@
 }
 
 #pragma mark - UIScrollView Delegate
+//此代理对象为webView的scrollView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
 
     CGFloat offSetY = scrollView.contentOffset.y;
+    NSLog(@"webView scrollView offsetY is %f", offSetY);
 
-    if (-offSetY <= 80 && -offSetY >= 0) {
+    if (-offSetY <= 80 && -offSetY >= 0) {//下拉
         
         [_detailHeaderView wf_parallaxHeaderViewWithOffset:offSetY];
        
-        if (-offSetY > 40 && !_detailWeb.scrollView.isDragging){
+        if (-offSetY > 40 && !_detailWeb.scrollView.isDragging){//上一页
             
             [self getPreviousNews];
         }

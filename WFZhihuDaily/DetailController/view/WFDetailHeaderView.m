@@ -51,8 +51,9 @@
     
 }
 
+//意义何在？
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    
+    NSLog(@"WFDetailHeaderView hitTest");
     if (event.type == UIEventTypeTouches) {
         
         NSSet *touches = [event touchesForView:self];
@@ -69,7 +70,7 @@
 - (void)wf_parallaxHeaderViewWithOffset:(CGFloat)offset{
     
      self.frame = CGRectMake(0, -40 - offset/2, kScreenWidth, 260 - offset/2);
-    
+    //改变y
      [_imgSourceLab setTop:240 - offset/2];
      [_titleLab setBottom:_imgSourceLab.bottom - 20];
 }

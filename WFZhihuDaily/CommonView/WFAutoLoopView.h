@@ -14,7 +14,10 @@
  */
 @interface WFAutoLoopView : UIView
 
-@property (nonatomic, copy)   void(^clickAutoLoopCallBackBlock)(WFBannerModel *banner);//点击图片事件回调
+/**
+ *  点击图片事件回调
+ */
+@property (nonatomic, copy)   void(^clickAutoLoopCallBackBlock)(WFBannerModel *banner);
 
 /**
  *   是否自动滚动（默认为YES）
@@ -31,7 +34,8 @@
  */
 @property (nonatomic, assign) BOOL stretchAnimation;
 
-@property (nonatomic, strong) NSArray *banners;//bannner数组 数据源
+//bannner数组 数据源
+@property (nonatomic, strong) NSArray *banners;
 
 - (void)reloadData;
 

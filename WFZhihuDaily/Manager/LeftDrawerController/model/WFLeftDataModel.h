@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+//左侧数据模型
 @interface WFLeftDataModel : NSObject
 
 @property (nonatomic, copy) NSArray *leftList;

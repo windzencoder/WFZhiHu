@@ -9,6 +9,7 @@
 #import "WFAutoLoopView.h"
 #import "WFBannerModel.h"
 #import "WFBannerView.h"
+
 #define kDefaultHeaderFrame CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)
 #define kBannerViewTag 186681
 #define kAlpha 180
@@ -16,6 +17,7 @@
 
 @interface WFAutoLoopView () <UIScrollViewDelegate>
 {
+    /**是否已经存在滚动条了*/
     BOOL _isHasBanners;
     CGFloat _offsetY;
     CGFloat _titleAlpha;
@@ -23,8 +25,8 @@
 @property (nonatomic, assign) int currentIdx;
 @property (nonatomic, assign) int pagesCount;
 @property (nonatomic, strong) NSMutableArray *cells;
-
-@property (nonatomic, assign, getter=isDragging) BOOL dragging; // 是否在用手指拖动scrollView
+/**是否在用手指拖动scrollView*/
+@property (nonatomic, assign, getter=isDragging) BOOL dragging;
 
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 @property (nonatomic, strong, readonly) UIPageControl *pageControl;
@@ -65,7 +67,7 @@
 }
 
 #pragma mark - Private Methods
-#pragma mark add scrollView
+#pragma mark - 添加UIScrollView
 - (void)addScrollView {
     
     _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
@@ -76,16 +78,15 @@
     [self addSubview:_scrollView];
 }
 
-#pragma mark add pageControl
+#pragma mark 添加UIPageControl
 - (void)addPageControl {
-    
     _pageControl = [[UIPageControl alloc] init];
     _pageControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     _pageControl.enabled = NO;
     [self insertSubview:_pageControl aboveSubview:self.scrollView];
 }
 
-#pragma mark udpate cells
+#pragma mark 更新cells
 //更新cells集合中放置的视图
 - (void)updateCells {
     //前一张
@@ -105,12 +106,25 @@
     
 }
 
+#pragma mark 传入一个idx来获取下一个正确的idx
+- (int)getVaildNextPageIdxWithIdx:(int)idx {
+    
+    if (idx == -1) {
+        return (int)_pagesCount - 1;
+    } else if (idx == _pagesCount) {
+        return 0;
+    } else {
+        return idx;
+    }
+}
+
 #pragma mark 重载cells
 - (void)reloadCells {
     
     //先移除
     [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     _pagesCount = self.numberOfPagesInAutoLoopView(self);
+    //更新cells
     [self updateCells];
     //重新调整frame
     for (NSInteger i = 0; i < _cells.count; i ++) {
@@ -143,21 +157,16 @@
     [self reloadCells];
 }
 
-#pragma mark 传入一个idx来获取下一个正确的idx
-- (int)getVaildNextPageIdxWithIdx:(int)idx {
-    
-    if (idx == -1) {
-        return (int)_pagesCount - 1;
-    } else if (idx == _pagesCount) {
-        return 0;
-    } else {
-        return idx;
-    }
-}
+
 
 #pragma mark 循环滚动的方法
+/**
+ *  1. Scrollview上只有3个cell view, 默认显示的是中间的一个，最开始偏移量是_scrollView的宽度
+ *  2. 自动滚动时，表示要偏移到下一个cell view，其位置是CGRectGetWidth(_scrollView.bounds) * 2
+ *  3. 所以在setBanners时，_currentIdx = (int)banners.count  - 1，在添加到window上时，会马上
+        滚动，显示第一张图片
+ */
 - (void)autoLoopScrollCell {
-    
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(autoLoopScrollCell) object:nil];
     CGPoint newOffset = CGPointMake(CGRectGetWidth(_scrollView.bounds) * 2, _scrollView.contentOffset.y);
     [_scrollView setContentOffset:newOffset animated:YES];
@@ -168,7 +177,6 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     CGFloat offsetX = scrollView.contentOffset.x;
-    NSLog(@"banner offsetX is %f", offsetX);
     if(offsetX >= (2 * CGRectGetWidth(scrollView.frame))) {
         self.currentIdx = [self getVaildNextPageIdxWithIdx:self.currentIdx + 1];
         [self reloadData];
@@ -185,7 +193,11 @@
 }
 
 #pragma mark - Setter //tips：切勿反复调用该setter方法
-
+/**
+ *  设置滚动条数据
+ *
+ *  @param banners 滚动条数据集合
+ */
 - (void)setBanners:(NSArray *)banners {
     if (_isHasBanners) {
         return;
@@ -194,7 +206,7 @@
     _currentIdx = (int)banners.count  - 1;
     NSMutableArray *cells = [NSMutableArray array];
     [banners enumerateObjectsUsingBlock:^(WFBannerModel *banner, NSUInteger idx, BOOL *stop) {
-        //单个图片
+        //图片View
         WFBannerView *cell = [[WFBannerView alloc] initWithFrame:self.frame];
         cell.banner = banner;
         cell.clickBannerCallBackBlock = ^(WFBannerModel *banner){
@@ -236,7 +248,9 @@
     _numberOfPagesInAutoLoopView = numberOfPagesInAutoLoopView;
     int count = numberOfPagesInAutoLoopView(self);
     _pageControl.numberOfPages = count;
+    //获取大小
     CGSize pcSize = [_pageControl sizeForNumberOfPages:count];
+    //设置_pageControl的frame
     _pageControl.frame = CGRectMake((self.bounds.size.width - pcSize.width) * 0.5, self.bounds.size.height - pcSize.height, pcSize.width, pcSize.height);
 }
 
@@ -252,6 +266,7 @@
         
         frame.origin.y = MAX(offset.y/2, 0);
         _scrollView.frame = frame;
+        DLog(@"_scrollView.frame : %@", NSStringFromCGRect(frame) );
         self.clipsToBounds = YES;
         _offsetY = MAX(offset.y/2, 0);
         

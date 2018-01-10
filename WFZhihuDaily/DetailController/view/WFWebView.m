@@ -56,14 +56,14 @@
 
 #pragma mark - Override -
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-
+    NSLog(@"WFWebView hitTest");
     if (event.type == UIEventTypeTouches) {
         
         NSSet *touches = [event touchesForView:self];
         UITouch *touch = [touches anyObject];
         
         if (touch.phase == UITouchPhaseBegan) {
-            
+            //添加拖动手势
             [self addGestureRecognizer:self.scrollView.panGestureRecognizer];
         }
     }

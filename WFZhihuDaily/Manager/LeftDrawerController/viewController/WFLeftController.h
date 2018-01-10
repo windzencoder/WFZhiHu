@@ -10,7 +10,7 @@
 #import "WFLeftVM.h"
 
 typedef void(^LeftDrawerAction)(NSString *);
-
+//左侧控制器
 @interface WFLeftController : UIViewController
 
 @property (nonatomic, copy) LeftDrawerAction drawerAction;

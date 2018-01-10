@@ -74,6 +74,7 @@
     
     _leftMenuView = [[UIView alloc] init];
     _leftMenuView = _leftController.view;
+    //超出屏幕范围，在屏幕的左侧
     _leftMenuView.frame = CGRectMake(-kScreenWidth * kDrawerRatio, 0, kScreenWidth * kDrawerRatio, kScreenHeight);
     [self.view addSubview:_leftMenuView];
     

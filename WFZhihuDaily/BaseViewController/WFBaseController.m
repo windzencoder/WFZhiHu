@@ -11,7 +11,6 @@
 @interface WFBaseController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UILabel *_navigationLabel;
-    
 }
 @end
 
